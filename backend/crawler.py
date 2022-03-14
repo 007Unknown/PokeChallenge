@@ -95,6 +95,145 @@ def load_file(num, folder="pokemon"):
     return file
 
 
+
+def pokemon_parsing(folders, num):
+    """
+    Parses a pokemon from multiple folders and returns the info
+    :param folders: folders to search in
+    :param num: pokemon number to find
+    :return:
+    """
+
+    try:
+        x = load_file(str(folders[0]), num)
+        y = load_file(str(folders[1]), num)
+    except Exception as e:
+        raise e
+
+    num = x['number']
+    name = x['name'].replace('♀', '-f').replace('♂', '-m')
+    gen = x['gen']
+    spec = x['species']
+    height = round(float(x['height'].replace("'", ".").replace('\"', '')) * 0.3048, 2)  # feet to cm
+    weight = round(float(x['weight'].replace(' lbs.', '')) * 0.4535924, 2)  # lbs to kg
+    description = x['description']
+    sprite = x['sprite']
+    base_xp = y['base_experience']
+    hp = y['stats'][0]['base_stat']
+    atk = y['stats'][1]['base_stat']
+    defense = y['stats'][2]['base_stat']
+    specialatk = y['stats'][3]['base_stat']
+    specialdef = y['stats'][4]['base_stat']
+    speed = y['stats'][5]['base_stat']
+
+    male = None
+    female = None
+    if len(x['gender']) > 1:
+        male = x['gender'][0]
+        female = x['gender'][1]
+    normal = x['abilities']['normal'][0]
+    hidden = None
+    if x['abilities'] and len(x['abilities']) == 2:
+        hidden = x['abilities']['hidden'][0]
+    type1 = x['types'][0]
+    type2 = None
+    if x['types'] and len(x['types']) == 2:
+        type2 = x['types'][1]
+
+    return (num, name, gen, spec, height, weight, description, sprite, base_xp, hp, atk, defense, specialatk,
+            specialdef, speed, male, female, normal, hidden, type1, type2)
+
+
+def pokemon_insert(num, info):
+    """
+    Inserts a pokemon row in the table
+    :param num: pokemon number to be inserted
+    :return: returns the row ID
+    """
+    cn = db_connect()
+    cursor = cn.cursor()
+
+    # placeholder
+    poke = ("INSERT INTO pokemon (ID, name, gen, species, height, weight, description, base_experience, sprite,"
+                   "hp, attack, defense, special_attack, special_defense, speed, male, female) "
+                   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    data = (num, name, gen, spec, height, weight, description, base_xp, sprite,
+              hp, atk, defense, specialatk, specialdef, spd, male, female)
+    cursor.execute(poke, data)
+    cn.commit()
+
+    cursor.close()
+    cn.close()
+    print(f'Done with {num}.')
+
+    return cursor.lastrowid
+
+
+def ability_insert(normal, hidden):
+    """
+
+    :param normal:
+    :param hidden:
+    :return: returns the row ID
+    """
+    # placeholder
+    cn = db_connect()  # placeholder
+    cursor = cn.cursor()  # placeholder
+
+    cursor.execute("INSERT INTO abilities (normal, hidden) VALUES (%s, %s, %s)", (normal, hidden))
+    cn.commit()
+    return cursor.lastrowid
+
+
+def type_insert(type1, type2):
+    """
+
+    :param type1: represents the first type
+    :param type2: represents the second type
+    :return: returns the row ID
+    """
+
+    # placeholder
+    cn = db_connect()  # placeholder
+    cursor = cn.cursor()  # placeholder
+
+    cursor.execute("INSERT INTO types (type1, type2) VALUES (%s, %s, %s)", (type1, type2))
+    cn.commit()
+    return cursor.lastrowid
+
+
+def relation_type_pokemon(pokemon_id, type_id):
+    """
+
+    :param pokemon_id: represents the pokemon ID
+    :param type_id: represents the type ID
+    :return:
+    """
+
+    # placeholder
+    cn = db_connect()  # placeholder
+    cursor = cn.cursor()  # placeholder
+
+    cursor.execute("INSERT INTO relTypesPokemon (pokemonID, typeID) VALUES (%s, %s)", (pokemon_id, type_id))
+    cn.commit()
+
+
+def relation_ability_pokemon(pokemon_id, ability_id):
+    """
+
+    :param pokemon_id: represents the pokemon ID
+    :param ability_id: represents ability ID
+    :return:
+    """
+
+    # placeholder
+    cn = db_connect()  # placeholder
+    cursor = cn.cursor()  # placeholder
+
+    cursor.execute("INSERT INTO relAbilitiesPokemon (pokemonID, abilityID) VALUES (%s, %s)", (pokemon_id, ability_id))
+    cn.commit()
+
+
 if __name__ == '__main__':
 
     load_file(1)  # example
