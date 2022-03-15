@@ -95,7 +95,6 @@ def load_file(num, folder="pokemon"):
     return file
 
 
-
 def pokemon_parsing(folders, num):
     """
     Parses a pokemon from multiple folders and returns the info
@@ -105,8 +104,8 @@ def pokemon_parsing(folders, num):
     """
 
     try:
-        x = load_file(str(folders[0]), num)
-        y = load_file(str(folders[1]), num)
+        x = load_file(str(num), str(folders[0]))
+        y = load_file(str(num), str(folders[1]))
     except Exception as e:
         raise e
 
@@ -237,3 +236,4 @@ def relation_ability_pokemon(pokemon_id, ability_id):
 if __name__ == '__main__':
 
     load_file(1)  # example
+    print(pokemon_parsing(("pokemons", "pokemons2"), 1))  # example
