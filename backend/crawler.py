@@ -2,14 +2,13 @@ import os
 import requests
 import json
 import mysql.connector
-from mysql.connector import errorcode
-from dotenv import load_dotenv
+from settings.database import DB
 
 
 def pokemon_get(index, api="https://pokeapi.glitch.me/v1/pokemon/", folder="pokemons"):
     """
-    Crawler that gets the pokemon data. First it checks if the file is local, otherwise it gets it from the API.
-    :param index: pokemon index
+    Crawler that gets the pokémon data. First it checks if the file is local, otherwise it gets it from the API.
+    :param index: pokémon index
     :param api: api selected to crawl
     :param folder: folder output
     :return:
@@ -29,53 +28,25 @@ def pokemon_get(index, api="https://pokeapi.glitch.me/v1/pokemon/", folder="poke
             else:
                 json.dump(r.json()[0], f, indent=4)
 
+        return r.status_code
+
 
 def pokemon_get_all(api="https://pokeapi.glitch.me/v1/pokemon/", folder="pokemons", first_index=1):
     """
-    Crawler that gets all the pokemon data. It depends on poke_get
-    :param first_index: first pokemon index
+    Crawler that gets all the pokémon data. It depends on poke_get
+    :param first_index: first pokémon index
     :param api: api selected to crawl
     :param folder: folder output
     :return:
     """
 
-    i = first_index
+    index = first_index
     while True:
-        pokemon_get(i, api, folder)
-        i += 1
+        pokemon_get(index, api, folder)
+        index += 1
 
 
-def db_connect():
-    """
-    Connects to the database with the .env file info
-    :return: db connection
-    """
-
-    try:
-
-        load_dotenv()
-        connection = mysql.connector.connect(
-            host=os.getenv("BE_HOST"),
-            port=3306,
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            database=os.getenv("DB_SCHEMA")
-        )
-
-    except mysql.connector.Error as e:
-        if e.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-            raise Exception('User or password is wrong')
-
-        elif e.errno == errorcode.ER_BAD_DB_ERROR:
-            raise Exception('Database does not exist')
-
-        else:
-            raise Exception(e)
-
-    return connection
-
-
-def load_file(num, folder="pokemon"):
+def load_file(num, folder="pokemons"):
     """
     Loads a json file and returns it
     :param num: number of the pokémon
@@ -89,151 +60,291 @@ def load_file(num, folder="pokemon"):
     try:
         with open(file_path, "r") as f:
             file = json.load(f)
-    except Exception as e:
-        raise e
+    except FileNotFoundError:
+        raise Exception('The file does not exist.')
 
     return file
 
 
-def pokemon_parsing(folders, num):
+def feet_to_meter(value):
     """
-    Parses a pokemon from multiple folders and returns the info
-    :param folders: folders to search in
-    :param num: pokemon number to find
-    :return:
+    Converts feet to meter
+    :param value: value to convert
+    :return: returns the converted value
+    """
+    return round(value * 0.3048, 2)
+
+
+def lb_to_kg(value):
+    """
+    Converts lb to kg
+    :param value: value to convert
+    :return: returns the converted value
+    """
+    return round(value * 0.4535924, 2)
+
+
+def height_parsing(height):
+    """
+    Parses the height given
+    :param height: height to parse
+    :return: returns the parsed height
     """
 
-    try:
-        x = load_file(str(num), str(folders[0]))
-        y = load_file(str(num), str(folders[1]))
-    except Exception as e:
-        raise e
+    if "'" in height:
+        height = height.replace("'", ".")
+    if "\\" in height:
+        height = height.replace("\\", "")
+    if '"' in height:
+        height = height.replace('"', '')
+    if "/" in height:
+        height = height.split("/", 1)[0].strip()
+    if ".`" in height:
+        height = height.replace('.`', '')
+
+    return feet_to_meter(float(height))
+
+
+def weight_parsing(weight):
+    """
+    Parses the weight given
+    :param weight: weight to parse
+    :return: returns the parsed weight
+    """
+
+    weight = weight.replace(' ', '')
+    if "lbs." in weight:
+        weight = weight.replace('lbs.', '')
+    if "lbs" in weight:
+        weight = weight.replace('lbs', '')
+    if "/" in weight:
+        weight = weight.split('/', 1)[0]
+
+    return lb_to_kg(float(weight))
+
+
+def pokemon_parsing(folders, num):
+    """
+    Parses a pokémon from multiple folders and returns the info
+    :param folders: folders to search in
+    :param num: pokémon number to find
+    :return: returns a tuple with the pokémon parsed
+    """
+
+    x = load_file(str(num), str(folders[0]))
+    y = load_file(str(num), str(folders[1]))
 
     num = x['number']
     name = x['name'].replace('♀', '-f').replace('♂', '-m')
     gen = x['gen']
     spec = x['species']
-    height = round(float(x['height'].replace("'", ".").replace('\"', '')) * 0.3048, 2)  # feet to cm
-    weight = round(float(x['weight'].replace(' lbs.', '')) * 0.4535924, 2)  # lbs to kg
     description = x['description']
     sprite = x['sprite']
     base_xp = y['base_experience']
     hp = y['stats'][0]['base_stat']
     atk = y['stats'][1]['base_stat']
     defense = y['stats'][2]['base_stat']
-    specialatk = y['stats'][3]['base_stat']
-    specialdef = y['stats'][4]['base_stat']
+    special_atk = y['stats'][3]['base_stat']
+    special_def = y['stats'][4]['base_stat']
     speed = y['stats'][5]['base_stat']
 
-    male = None
-    female = None
-    if len(x['gender']) > 1:
-        male = x['gender'][0]
-        female = x['gender'][1]
-    normal = x['abilities']['normal'][0]
-    hidden = None
-    if x['abilities'] and len(x['abilities']) == 2:
-        hidden = x['abilities']['hidden'][0]
-    type1 = x['types'][0]
-    type2 = None
-    if x['types'] and len(x['types']) == 2:
-        type2 = x['types'][1]
+    gender_rate = {
+        "male": x['gender'][0] if len(x['gender']) > 1 else None,
+        "female": x['gender'][1] if len(x['gender']) > 1 else None
+    }
 
-    return (num, name, gen, spec, height, weight, description, sprite, base_xp, hp, atk, defense, specialatk,
-            specialdef, speed, male, female, normal, hidden, type1, type2)
+    abilities = {
+        "normal": [ability for ability in x['abilities']['normal']],
+        "hidden": [hidden for hidden in x['abilities']['hidden']]
+    }
+
+    types = {pokemon_type for pokemon_type in x['types']}
+
+    return (num, name, gen, spec, height_parsing(x['height']), weight_parsing(x['weight']), description, base_xp,
+            sprite, hp, atk, defense, special_atk, special_def, speed, gender_rate, abilities, types)
 
 
-def pokemon_insert(num, info):
+def pokemon_insert(info):
     """
-    Inserts a pokemon row in the table
-    :param num: pokemon number to be inserted
+    Inserts a pokémon with parsed information and inserts a row in the table
+    :param info: pokémon number to be inserted
     :return: returns the row ID
     """
-    cn = db_connect()
-    cursor = cn.cursor()
-
-    # placeholder
+    cursor = DB.cursor()
     poke = ("INSERT INTO pokemon (ID, name, gen, species, height, weight, description, base_experience, sprite,"
-                   "hp, attack, defense, special_attack, special_defense, speed, male, female) "
-                   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-    data = (num, name, gen, spec, height, weight, description, base_xp, sprite,
-              hp, atk, defense, specialatk, specialdef, spd, male, female)
-    cursor.execute(poke, data)
-    cn.commit()
+            "hp, attack, defense, special_attack, special_defense, speed, male, female) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    data = (info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8],
+            info[9], info[10], info[11], info[12], info[13], info[14], info[15]['male'], info[15]['female'])
+
+    try:
+        cursor.execute(poke, data)
+        DB.commit()
+    except mysql.connector.IntegrityError as e:
+        raise Exception(f'Error {e}')
 
     cursor.close()
-    cn.close()
-    print(f'Done with {num}.')
-
     return cursor.lastrowid
 
 
-def ability_insert(normal, hidden):
+def pokemon_insert_all(first_index=1):
     """
-
-    :param normal:
-    :param hidden:
+    Iterative function that inserts all pokémon with a certain first index
+    :param first_index: first pokémon index ID
     :return: returns the row ID
     """
-    # placeholder
-    cn = db_connect()  # placeholder
-    cursor = cn.cursor()  # placeholder
 
-    cursor.execute("INSERT INTO abilities (normal, hidden) VALUES (%s, %s, %s)", (normal, hidden))
-    cn.commit()
+    index = first_index
+    while True:
+        parse = pokemon_parsing(("pokemons", "pokemons2"), index)
+        pokemon_insert(parse)
+        index += 1
+
+
+def ability_insert(pokemon_ability, ability_type):
+    """
+    Inserts a column in the abilities table
+    :param pokemon_ability: pokémon ability name
+    :param ability_type: pokémon ability type [normal|hidden]
+    :return: returns the row ID
+    """
+
+    cursor = DB.cursor()
+    cursor.execute("INSERT INTO abilities (ability, abilityType) VALUES (%s, %s)",
+                   (pokemon_ability, ability_type))
+    DB.commit()
     return cursor.lastrowid
 
 
-def type_insert(type1, type2):
+def type_insert(pokemon_type):
     """
-
-    :param type1: represents the first type
-    :param type2: represents the second type
+    Insert a type column in the types table
+    :param pokemon_type: represents the type
     :return: returns the row ID
     """
 
-    # placeholder
-    cn = db_connect()  # placeholder
-    cursor = cn.cursor()  # placeholder
-
-    cursor.execute("INSERT INTO types (type1, type2) VALUES (%s, %s, %s)", (type1, type2))
-    cn.commit()
+    cursor = DB.cursor()
+    cursor.execute("INSERT INTO types (type) VALUES (%s)", (pokemon_type,))
+    DB.commit()
     return cursor.lastrowid
 
 
 def relation_type_pokemon(pokemon_id, type_id):
     """
-
-    :param pokemon_id: represents the pokemon ID
+    Makes a relation between the type(s) and the pokémon
+    :param pokemon_id: represents the pokémon ID
     :param type_id: represents the type ID
     :return:
     """
 
-    # placeholder
-    cn = db_connect()  # placeholder
-    cursor = cn.cursor()  # placeholder
-
+    cursor = DB.cursor()
     cursor.execute("INSERT INTO relTypesPokemon (pokemonID, typeID) VALUES (%s, %s)", (pokemon_id, type_id))
-    cn.commit()
+    DB.commit()
 
 
 def relation_ability_pokemon(pokemon_id, ability_id):
     """
-
-    :param pokemon_id: represents the pokemon ID
+    Makes a relation between the ability(ies) and the pokémon
+    :param pokemon_id: represents the pokémon ID
     :param ability_id: represents ability ID
     :return:
     """
 
-    # placeholder
-    cn = db_connect()  # placeholder
-    cursor = cn.cursor()  # placeholder
+    cursor = DB.cursor()
 
     cursor.execute("INSERT INTO relAbilitiesPokemon (pokemonID, abilityID) VALUES (%s, %s)", (pokemon_id, ability_id))
-    cn.commit()
+    DB.commit()
+
+
+def full_insert(info):
+    """
+    Inserts a Pokémon with the desired info
+    :param info: full information of the pokémon parsed, can use pokemon_parsing for that
+    :return: None
+    """
+
+    poke_exists = pokemon_exists(info[1])
+    if poke_exists[0]:
+        poke = poke_exists[1]
+    else:
+        poke = pokemon_insert(info)
+    for pokemon_ability in info[16]['normal']:
+        ab_exists = ability_exists(pokemon_ability)
+        if ab_exists[0]:
+            ability_normal = ab_exists[1]
+        else:
+            ability_normal = ability_insert(pokemon_ability, "Normal")
+        relation_ability_pokemon(poke, ability_normal)
+
+    if info[16]['hidden']:
+        for pokemon_ability in info[16]['hidden']:
+            ab_exists = ability_exists(pokemon_ability)
+            if ab_exists[0]:
+                ability_hidden = ab_exists[1]
+            else:
+                ability_hidden = ability_insert(pokemon_ability, "Hidden")
+            relation_ability_pokemon(poke, ability_hidden)
+
+    for pokemon_type in info[17]:
+        tp_exists = type_exists(pokemon_type)
+        if tp_exists[0]:
+            type_name = tp_exists[1]
+        else:
+            type_name = type_insert(pokemon_type)
+        relation_type_pokemon(poke, type_name)
+
+
+def full_insert_all(index=1, end=807):
+    """
+    Inserts all (with an index and end) pokémon with the desired info
+    :param index: first number given
+    :param end: last number given
+    :return: None
+    """
+
+    for numb in range(index, end+1):
+        parsing = pokemon_parsing(("pokemons", "pokemons2"), numb)
+        full_insert(parsing)
+
+
+def pokemon_exists(p):
+    """
+    Checks if the pokémon exists in the pokemon table
+    :param p: column to check the type
+    :return: returns bool (if it exists) and the row ID
+    """
+
+    cursor = DB.cursor()
+    cursor.execute("SELECT * FROM pokemon WHERE name=%s LIMIT 1", (p,))
+    y = cursor.fetchall()
+    return bool(y), y[0][0] if y else None
+
+
+def type_exists(t):
+    """
+    Checks if the type exists in the type table
+    :param t: column to check the type
+    :return: returns bool (if it exists) and the row ID
+    """
+
+    cursor = DB.cursor()
+    cursor.execute("SELECT * FROM types WHERE type=%s LIMIT 1", (t,))
+    y = cursor.fetchall()
+    return bool(y), y[0][0] if y else None
+
+
+def ability_exists(a):
+    """
+    Checks if the type exists in the ability table
+    :param a: column to check the ability
+    :return: returns bool (if it exists) and the row ID
+    """
+
+    cursor = DB.cursor()
+    cursor.execute("SELECT * FROM abilities WHERE ability=%s LIMIT 1", (a,))
+    y = cursor.fetchall()
+    return bool(y), y[0][0] if y else None
 
 
 if __name__ == '__main__':
-
-    load_file(1)  # example
-    print(pokemon_parsing(("pokemons", "pokemons2"), 1))  # example
+    full_insert_all()  # example
