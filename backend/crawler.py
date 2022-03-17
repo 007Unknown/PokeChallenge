@@ -264,34 +264,34 @@ def full_insert(info):
     """
 
     poke_exists = pokemon_exists(info[1])
-    if poke_exists[0]:
+    if poke_exists[0]:  # if the pokémon exists, returns the row ID
         poke = poke_exists[1]
     else:
-        poke = pokemon_insert(info)
+        poke = pokemon_insert(info)  # otherwise, it inserts it
     for pokemon_ability in info[16]['normal']:
         ab_exists = ability_exists(pokemon_ability)
-        if ab_exists[0]:
+        if ab_exists[0]:  # if the ability exists, returns the row ID
             ability_normal = ab_exists[1]
         else:
-            ability_normal = ability_insert(pokemon_ability, "Normal")
-        relation_ability_pokemon(poke, ability_normal)
+            ability_normal = ability_insert(pokemon_ability, "Normal")  # otherwise, it inserts it
+        relation_ability_pokemon(poke, ability_normal)  # make the relation between the ability and pokémon
 
-    if info[16]['hidden']:
+    if info[16]['hidden']:  # if there is any hidden ability
         for pokemon_ability in info[16]['hidden']:
             ab_exists = ability_exists(pokemon_ability)
-            if ab_exists[0]:
+            if ab_exists[0]:  # if the hidden ability exists, returns the row ID
                 ability_hidden = ab_exists[1]
             else:
-                ability_hidden = ability_insert(pokemon_ability, "Hidden")
-            relation_ability_pokemon(poke, ability_hidden)
+                ability_hidden = ability_insert(pokemon_ability, "Hidden")  # otherwise, it inserts it
+            relation_ability_pokemon(poke, ability_hidden)  # make the relation between the ability and pokémon
 
     for pokemon_type in info[17]:
         tp_exists = type_exists(pokemon_type)
-        if tp_exists[0]:
+        if tp_exists[0]:  # if the type exists, returns the row ID
             type_name = tp_exists[1]
         else:
-            type_name = type_insert(pokemon_type)
-        relation_type_pokemon(poke, type_name)
+            type_name = type_insert(pokemon_type)  # otherwise, it inserts it
+        relation_type_pokemon(poke, type_name)  # make the relation between the type and pokémon
 
 
 def full_insert_all(index=1, end=807):
@@ -315,7 +315,7 @@ def pokemon_exists(p):
     """
 
     cursor = DB.cursor()
-    cursor.execute("SELECT * FROM pokemon WHERE name=%s LIMIT 1", (p,))
+    cursor.execute("SELECT * FROM pokemon WHERE name=%s LIMIT 1", (p,))  # searches if there's any of the P pokemon
     y = cursor.fetchall()
     return bool(y), y[0][0] if y else None
 
@@ -328,7 +328,7 @@ def type_exists(t):
     """
 
     cursor = DB.cursor()
-    cursor.execute("SELECT * FROM types WHERE type=%s LIMIT 1", (t,))
+    cursor.execute("SELECT * FROM types WHERE type=%s LIMIT 1", (t,))  # searches if there's any of the T type
     y = cursor.fetchall()
     return bool(y), y[0][0] if y else None
 
@@ -341,7 +341,7 @@ def ability_exists(a):
     """
 
     cursor = DB.cursor()
-    cursor.execute("SELECT * FROM abilities WHERE ability=%s LIMIT 1", (a,))
+    cursor.execute("SELECT * FROM abilities WHERE ability=%s LIMIT 1", (a,))  # searches if there's any of the A ability
     y = cursor.fetchall()
     return bool(y), y[0][0] if y else None
 
