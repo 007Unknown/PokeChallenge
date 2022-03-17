@@ -252,6 +252,7 @@ def ability_insert(pokemon_ability, ability_type):
     cursor.execute("INSERT INTO abilities (ability, abilityType) VALUES (%s, %s)",
                    (pokemon_ability, ability_type))
     DB.commit()
+    cursor.close()
     return cursor.lastrowid
 
 
@@ -265,6 +266,7 @@ def type_insert(pokemon_type):
     cursor = DB.cursor()
     cursor.execute("INSERT INTO types (type) VALUES (%s)", (pokemon_type,))
     DB.commit()
+    cursor.close()
     return cursor.lastrowid
 
 
@@ -279,6 +281,7 @@ def relation_type_pokemon(pokemon_id, type_id):
     cursor = DB.cursor()
     cursor.execute("INSERT INTO relTypesPokemon (pokemonID, typeID) VALUES (%s, %s)", (pokemon_id, type_id))
     DB.commit()
+    cursor.close()
 
 
 def relation_ability_pokemon(pokemon_id, ability_id):
@@ -293,6 +296,7 @@ def relation_ability_pokemon(pokemon_id, ability_id):
 
     cursor.execute("INSERT INTO relAbilitiesPokemon (pokemonID, abilityID) VALUES (%s, %s)", (pokemon_id, ability_id))
     DB.commit()
+    cursor.close()
 
 
 def full_insert(info):
@@ -355,6 +359,7 @@ def pokemon_exists(p):
 
     cursor = DB.cursor()
     cursor.execute("SELECT * FROM pokemon WHERE name=%s LIMIT 1", (p,))  # searches if there's any of the P pokemon
+    cursor.close()
     y = cursor.fetchall()
     return bool(y), y[0][0] if y else None
 
@@ -368,6 +373,7 @@ def type_exists(t):
 
     cursor = DB.cursor()
     cursor.execute("SELECT * FROM types WHERE type=%s LIMIT 1", (t,))  # searches if there's any of the T type
+    cursor.close()
     y = cursor.fetchall()
     return bool(y), y[0][0] if y else None
 
@@ -381,9 +387,11 @@ def ability_exists(a):
 
     cursor = DB.cursor()
     cursor.execute("SELECT * FROM abilities WHERE ability=%s LIMIT 1", (a,))  # searches if there's any of the A ability
+    cursor.close()
     y = cursor.fetchall()
     return bool(y), y[0][0] if y else None
 
 
 if __name__ == '__main__':
-    download_images(1)  # example
+    full_insert_all()  # example
+    download_images()  # example
