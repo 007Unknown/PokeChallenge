@@ -1,4 +1,5 @@
 import os
+import shutil
 import requests
 import json
 import mysql.connector
@@ -64,6 +65,44 @@ def load_file(num, folder="pokemons"):
         raise Exception('The file does not exist.')
 
     return file
+
+
+def download_image(number=1, folder='images'):
+    """
+    Downloads an image from the parsed jsons
+    :param number: number provided to download from
+    :param folder: folder to search in
+    :return: returns False if both the directory was made and the file exists, otherwise it gets both
+    """
+
+    sprite = load_file(number)['sprite']
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, str(folder), str(number) + ".png")
+
+    if not os.path.exists(str(folder)):
+        os.mkdir(str(folder))
+
+    if not os.path.exists(file_path):
+        r = requests.get(sprite, stream=True)
+        if r.status_code == 200:
+            with open(file_path, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+
+        return r.status_code
+
+    return False
+
+
+def download_images(first_index=1):
+    """
+    Downloads all images starting from a first index, using download_image function
+    :param first_index: first number
+    :return: None
+    """
+    index = first_index
+    while True:
+        download_image(index)
+        index += 1
 
 
 def feet_to_meter(value):
@@ -347,4 +386,4 @@ def ability_exists(a):
 
 
 if __name__ == '__main__':
-    full_insert_all()  # example
+    download_images(1)  # example
