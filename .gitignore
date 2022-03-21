@@ -1,4 +1,7 @@
 .env
 .idea
 backend/pokemons/*
+backend/pokemons2/*
 database/*
+*.pyc
+backend/images/

@@ -21,6 +21,10 @@ services:
             FLASK_APP: app
             FLASK_RUN_HOST: ${BE_HOST}
             FLASK_RUN_PORT: ${BE_PORT}
+            MYSQL_HOST: '${DB_HOST}'
+            MYSQL_DATABASE: '${DB_SCHEMA}'
+            MYSQL_USER: '${DB_USER}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
         volumes:
             - './backend:/app'
             - './frontend/images:/app/images'
