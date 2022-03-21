@@ -75,7 +75,7 @@ def download_image(number=1, folder='images'):
     :return: returns False if both the directory was made and the file exists, otherwise it gets both
     """
 
-    sprite = load_file(number)['sprite']
+    sprite = link_parsing(load_file(number)['sprite'])
     dir_path = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(dir_path, str(folder), str(number) + ".png")
 
@@ -162,6 +162,33 @@ def weight_parsing(weight):
     return lb_to_kg(float(weight))
 
 
+def name_parsing(name):
+    """
+    Parses the name given
+    :param name: name to parse
+    :return: returns the parsed name
+    """
+
+    if '♀' in name:
+        name = name.replace('♀', '-f')
+    if '♂' in name:
+        name = name.replace('♂', '-m')
+    if '-' in name:
+        name = name.split('-')[0].strip()
+
+    return name
+
+
+def link_parsing(link):
+    """
+    Parses the link given
+    :param link: link to parse
+    :return: returns the parsed link
+    """
+
+    return link.split('-')[0]+".png" if '-' in link else link
+
+
 def pokemon_parsing(folders, num):
     """
     Parses a pokémon from multiple folders and returns the info
@@ -174,7 +201,7 @@ def pokemon_parsing(folders, num):
     y = load_file(str(num), str(folders[1]))
 
     num = x['number']
-    name = x['name'].replace('♀', '-f').replace('♂', '-m')
+    name = name_parsing(x['name'])
     gen = x['gen']
     spec = x['species']
     description = x['description']
@@ -200,7 +227,7 @@ def pokemon_parsing(folders, num):
     types = {pokemon_type for pokemon_type in x['types']}
 
     return (num, name, gen, spec, height_parsing(x['height']), weight_parsing(x['weight']), description, base_xp,
-            sprite, hp, atk, defense, special_atk, special_def, speed, gender_rate, abilities, types)
+            link_parsing(sprite), hp, atk, defense, special_atk, special_def, speed, gender_rate, abilities, types)
 
 
 def pokemon_insert(info):
@@ -316,7 +343,8 @@ def full_insert(info):
             ability_normal = ab_exists[1]
         else:
             ability_normal = ability_insert(pokemon_ability, "Normal")  # otherwise, it inserts it
-        relation_ability_pokemon(poke, ability_normal)  # make the relation between the ability and pokémon
+        if not poke_exists[0]:
+            relation_ability_pokemon(poke, ability_normal)  # make the relation between the ability and pokémon
 
     if info[16]['hidden']:  # if there is any hidden ability
         for pokemon_ability in info[16]['hidden']:
@@ -325,7 +353,8 @@ def full_insert(info):
                 ability_hidden = ab_exists[1]
             else:
                 ability_hidden = ability_insert(pokemon_ability, "Hidden")  # otherwise, it inserts it
-            relation_ability_pokemon(poke, ability_hidden)  # make the relation between the ability and pokémon
+            if not poke_exists[0]:
+                relation_ability_pokemon(poke, ability_hidden)  # make the relation between the ability and pokémon
 
     for pokemon_type in info[17]:
         tp_exists = type_exists(pokemon_type)
@@ -333,7 +362,8 @@ def full_insert(info):
             type_name = tp_exists[1]
         else:
             type_name = type_insert(pokemon_type)  # otherwise, it inserts it
-        relation_type_pokemon(poke, type_name)  # make the relation between the type and pokémon
+        if not poke_exists[0]:
+            relation_type_pokemon(poke, type_name)  # make the relation between the type and pokémon
 
 
 def full_insert_all(index=1, end=807):
