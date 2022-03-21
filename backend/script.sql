@@ -1,17 +1,19 @@
 CREATE TABLE IF NOT EXISTS pokemon (
 	ID INT(4) NOT NULL AUTO_INCREMENT,
-	name VARCHAR(16) NOT NULL UNIQUE,
+	name VARCHAR(32) NOT NULL UNIQUE,
+	gen INT(4) NOT NULL,
+	species VARCHAR(255) NOT NULL,
 	height FLOAT NOT NULL,
 	weight FLOAT NOT NULL,
-	description VARCHAR(255) NOT NULL UNIQUE,
-	base_xp SMALLINT(4) unsigned NOT NULL,
+	description VARCHAR(255) NOT NULL,
+	base_experience SMALLINT(4) unsigned NOT NULL,
 	sprite VARCHAR(255) NOT NULL UNIQUE,
 	hp INT NOT NULL,
-	atk INT NOT NULL,
-	def INT NOT NULL,
-	specialatk INT NOT NULL,
-	specialdef INT NOT NULL,
-	spd INT NOT NULL,
+	attack INT NOT NULL,
+	defense INT NOT NULL,
+	special_attack INT NOT NULL,
+	special_defense INT NOT NULL,
+	speed INT NOT NULL,
 	male float,
 	female float,
 	PRIMARY KEY (ID)
@@ -19,8 +21,8 @@ CREATE TABLE IF NOT EXISTS pokemon (
 
 CREATE TABLE IF NOT EXISTS abilities (
 	ID INT NOT NULL AUTO_INCREMENT,
-	normal VARCHAR(255),
-	hidden VARCHAR(255),
+	ability VARCHAR(255) UNIQUE,
+	abilityType VARCHAR(255),
 	PRIMARY KEY (ID)
 );
 
@@ -37,7 +39,7 @@ CREATE TABLE IF NOT EXISTS relAbilitiesPokemon (
 
 CREATE TABLE IF NOT EXISTS types (
 	ID INT NOT NULL AUTO_INCREMENT,
-	name VARCHAR(255) NOT NULL,
+	type VARCHAR(255) NOT NULL UNIQUE,
 	PRIMARY KEY (ID)
 );
 
