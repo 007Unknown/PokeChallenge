@@ -173,7 +173,7 @@ def name_parsing(name):
         name = name.replace('♀', '-f')
     if '♂' in name:
         name = name.replace('♂', '-m')
-    if '-' in name:
+    if ' - ' in name:
         name = name.split('-')[0].strip()
 
     return name
