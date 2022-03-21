@@ -32,7 +32,7 @@ def pokemon():
     query = " ".join([query, filters])
     cursor = DB.cursor()
     cursor.execute(query, tuple(data))
-    return json.dumps(cursor.fetchall())
+    return json.dumps(cursor.fetchall()[0])
 
 
 if __name__ == '__main__':
