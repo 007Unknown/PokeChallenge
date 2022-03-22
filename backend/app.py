@@ -29,10 +29,12 @@ def pokemon():
 
     filters = " AND ".join(conditions)
 
+    if not args:
+        query = 'SELECT * FROM pokemon'
     query = " ".join([query, filters])
     cursor = DB.cursor()
     cursor.execute(query, tuple(data))
-    return json.dumps(cursor.fetchall()[0])
+    return json.dumps(cursor.fetchall())
 
 
 if __name__ == '__main__':
