@@ -1,9 +1,11 @@
 from flask import Flask, request
+from flask_cors import CORS
 from settings.database import DB
 import json
 
 
 app = Flask(__name__)
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 @app.route('/')
