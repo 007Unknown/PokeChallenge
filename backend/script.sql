@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS pokemon (
 	weight FLOAT NOT NULL,
 	description VARCHAR(255) NOT NULL,
 	base_experience SMALLINT(4) unsigned NOT NULL,
-	sprite VARCHAR(255) NOT NULL UNIQUE,
 	hp INT NOT NULL,
 	attack INT NOT NULL,
 	defense INT NOT NULL,
