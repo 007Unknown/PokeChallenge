@@ -15,6 +15,9 @@
 </head>
 
 <body>
+	<div class="sidebar fixed lg:right-10 w-[500px] h-[200px] text-center bg-white rounded-lg shadow h-screen">
+	test<br>this is another test<br>lol get rekd
+	</div>
 	<div class="bg-gray-100 pl-40 py-8">
 		<!-- search bar -->
 		<div>
@@ -22,7 +25,7 @@
 				<label>
 					<input id="textBox" class="w-80 input text-justify relative " placeholder="Search your Pokémon!" type="text" name="search">
 					<label class="pl-80">
-						<button id="btn" onclick="search(getValue())" class="transition duration-200 hover:translate-x-1 drop-shadow-md px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg" type="button">search</button>
+						<button id="btn" onclick="search(getValue())" class="drop-shadow-md px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg" type="button"><i class="material-icons text-sm scale-150 transition ease-in-out duration-700 hover:rotate-180">catching_pokemon</i></button>
 					</label>
 				</label>
 			</div>
@@ -79,8 +82,8 @@
 					<option value="Last">lowest</option>
 				</select>
 			</label>
-			<button type="button" class="transition duration-200 hover:rotate-12 inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-6 py-2.5 text-center mr-2 mb-2 shadow-md">
-					🔃</button>
+			<button type="button" class="flex items-stretch self-center inline-flex bg-white rounded-lg text-sm px-3 py-2.5 shadow-md">
+				<i class="material-icons text-sm scale-150 transition ease-in-out duration-500 hover:rotate-180">refresh</i></button>
 		</div>
 		<!-- pokemon list -->
 		<div class="grid grid-flow-col auto-cols-max py-8 space-x-5">
