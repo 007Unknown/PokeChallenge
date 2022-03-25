@@ -1,20 +1,100 @@
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
 	<title>Pokémon Challenge</title>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="keywords" content="__keywords_here__" />
-	<meta name="description" content="__description_here__" />
+	<meta name="description" content="pokémon challenge" />
 	<meta name="robots" content="index" />
-	<meta name="author" content="__developer_name__" />
+	<meta name="author" content="hugo santos" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="js/script.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-	<h1>
-		Hello Trainer, Hugo
-	</h1>
-</body>
+	<div class="bg-gray-100 pl-40 py-8">
+		<!-- search bar -->
+		<div>
+			<div class="form-select form-select-lg flex inline-flex input-group relative flex flex-wrap rounded-lg drop-shadow-xl bg-white max-w-max p-3">
+				<label>
+					<input id="textBox" class="w-80 input text-justify relative " placeholder="Search your Pokémon!" type="text" name="search">
+					<label class="pl-80">
+						<button id="btn" onclick="search(getValue())" class="transition duration-200 hover:translate-x-1 drop-shadow-md px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg" type="button">search</button>
+					</label>
+				</label>
+			</div>
+		</div>
+		<!-- ascending bar -->
+		<div class="py-5 font-bold text-lg">
+			<label>
+				<select class="inline-flex font-bold rounded-full text-sm bg-transparent text-center mr-2 mb-2">
+					<option value="default">Ascending</option>
+					<option value="First">Descending</option>
+				</select>
+			</label>
+			<label class="pl-80">
+				from
+				<input class="bg-transparent text-right pr-5 outline outline-1 rounded-lg w-20 h-10" type="text" name="search">
+				to
+				<input class="bg-transparent text-right pr-5 outline outline-1 rounded-lg w-20 h-10" type="text" name="search">
+			</label>
+		</div>
+		<!-- options bar -->
+		<div class="space-x-2">
+			<label>
+				<select name="Type" class="inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-5 py-2.5 text-left mr-2 mb-2 shadow-md">
+					<option value="default">Ability</option>
+					<option value="First">First</option>
+					<option value="Last">Last</option>
+				</select>
+			</label>
+			<label>
+				<select name="Type" class="inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-5 py-2.5 text-left mr-2 mb-2 shadow-md">
+					<option value="default">Weakness</option>
+					<option value="First">First</option>
+					<option value="Last">Last</option>
+				</select>
+			</label>
+			<label>
+				<select name="Type" class="inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-5 py-2.5 text-left mr-2 mb-2 shadow-md">
+					<option value="default">Ability</option>
+					<option value="First">First</option>
+					<option value="Last">Last</option>
+				</select>
+			</label>
+			<label>
+				<select name="Type" class="inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-5 py-2.5 text-left mr-2 mb-2 shadow-md">
+					<option value="default">Height</option>
+					<option value="First">First</option>
+					<option value="Last">Last</option>
+				</select>
+			</label>
+			<label>
+				<select name="Type" class="inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-5 py-2.5 text-left mr-2 mb-2 shadow-md">
+					<option value="default">Weight</option>
+					<option value="First">highest</option>
+					<option value="Last">lowest</option>
+				</select>
+			</label>
+			<button type="button" class="transition duration-200 hover:rotate-12 inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-6 py-2.5 text-center mr-2 mb-2 shadow-md">
+					🔃</button>
+		</div>
+		<!-- pokemon list -->
+		<div class="grid grid-flow-col auto-cols-max py-8 space-x-5">
+			<button class="transition duration-200 hover:-translate-y-1 inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-20 py-20  mr-2 mb-2 shadow-md">
+				juicer
+			</button>
+			<button class="transition duration-200 hover:-translate-y-1 inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-20 py-20  mr-2 mb-2 shadow-md">
+				placeholder
+			</button>
+			<button class="transition duration-200 hover:-translate-y-1 inline-flex text-gray-500 bg-white font-medium rounded-lg text-sm px-20 py-20  mr-2 mb-2 shadow-md">
+				another one
+			</button>
+		</div>
+	</div>
 
+</body>
 </html>
