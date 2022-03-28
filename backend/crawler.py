@@ -237,10 +237,10 @@ def pokemon_insert(info):
     :return: returns the row ID
     """
     cursor = DB.cursor()
-    poke = ("INSERT INTO pokemon (ID, name, gen, species, height, weight, description, base_experience, sprite,"
+    poke = ("INSERT INTO pokemon (ID, name, gen, species, height, weight, description, base_experience,"
             "hp, attack, defense, special_attack, special_defense, speed, male, female) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
-    data = (info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7], info[8],
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)")
+    data = (info[0], info[1], info[2], info[3], info[4], info[5], info[6], info[7],
             info[9], info[10], info[11], info[12], info[13], info[14], info[15]['male'], info[15]['female'])
 
     try:
@@ -423,4 +423,4 @@ def ability_exists(a):
 
 if __name__ == '__main__':
     full_insert_all()  # example
-    download_images()  # example
+    #download_images()  # example
