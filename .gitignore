@@ -5,3 +5,5 @@ backend/pokemons2/*
 database/*
 *.pyc
 backend/images/
+frontend/images/hd/*
+frontend/images/background/sprites/*
