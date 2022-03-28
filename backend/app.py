@@ -34,7 +34,7 @@ def pokemon():
     if not args:
         query = 'SELECT * FROM pokemon'
     query = " ".join([query, filters])
-    cursor = DB.cursor()
+    cursor = DB.cursor(dictionary=True)
     cursor.execute(query, tuple(data))
     return json.dumps(cursor.fetchall())
 
