@@ -24,7 +24,7 @@ def pokemon():
     data = []
     conditions = []
 
-    query = "SELECT * FROM pokemon WHERE"
+    query = 'SELECT * FROM pokemon WHERE'
     for arg in args:
         conditions.append(f"{arg}=%s")
         data.append(args.get(arg))
