@@ -423,4 +423,4 @@ def ability_exists(a):
 
 if __name__ == '__main__':
     full_insert_all()  # example
-    #download_images()  # example
+    download_images()  # example
