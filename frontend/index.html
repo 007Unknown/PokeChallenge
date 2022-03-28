@@ -1,20 +1,155 @@
-<html>
-
+<!doctype html>
+<html lang="en">
 <head>
 	<title>Pokémon Challenge</title>
 	<meta charset="utf-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="keywords" content="__keywords_here__" />
-	<meta name="description" content="__description_here__" />
+	<meta name="description" content="pokémon challenge" />
 	<meta name="robots" content="index" />
-	<meta name="author" content="__developer_name__" />
+	<meta name="author" content="hugo santos" />
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script src="js/script.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body>
-	<h1>
-		Hello Trainer, Hugo
-	</h1>
+<body class="bg-gray-100 bg-[length:350px_350px] bg-local bg-no-repeat bg-left-top" style="background-image: url('images/pokeball-light-2.png')">
+	<div class="pl-40">
+		<!-- header part -->
+		<header class="py-8">
+			<div>
+				<div class="rounded-lg drop-shadow-xl bg-white p-5 w-11/12">
+					<div class="grid grid-cols-7 text-center">
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-2 ">home</i>Home
+						</div>
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-1">catching_pokemon</i>Pokédex
+						</div>
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-2">gamepad</i>Video games
+						</div>
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-2">style</i>GCC Pokémon
+						</div>
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-2">live_tv</i>TV Pokémon
+						</div>
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-2">emoji_events</i>Play! Pokémon
+						</div>
+						<div class="text-gray-700 font-medium font-bold hover:text-gray-500 tran m-5sition duration-200 hover:-translate-y-0.5">
+							<i class="material-icons text-sm scale-150 pr-2">newspaper</i>News
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div class="grid grid-cols-3">
+			<!-- search bar -->
+			<div class="lg:col-span-3">
+				<div class="flex items-center form-select form-select-lg input-group relative flex flex-wrap rounded-lg drop-shadow-xl bg-white w-8/12 p-5">
+					<label>
+						<input id="textBox" class="w-80 input text-justify relative " placeholder="Search your Pokémon!" type="text" name="search">
+						<label class="absolute inset-y-3 right-5">
+							<button id="btn" onclick="search(getValue())" class="drop-shadow-md px-3 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg" type="button"><i class="material-icons text-sm scale-150 transition ease-in-out duration-700 hover:rotate-180">catching_pokemon</i></button>
+						</label>
+					</label>
+				</div>
+			</div>
+			<!-- ascending bar -->
+			<div class="col-span-3 flex items-center form-select form-select-lg input-group relative flex flex-wrap w-8/12 py-8">
+				<label>
+					<select class="inline-flex font-bold rounded-full text-sm bg-transparent text-center mr-2 mb-2">
+						<option value="default">Ascending</option>
+						<option value="First">Descending</option>
+					</select>
+				</label>
+				<label class="absolute right-2 font-bold">
+					from
+					<input class="bg-transparent text-right pr-5 outline outline-1 rounded-lg w-20 h-10" type="text" name="search">
+					to
+					<input class="bg-transparent text-right pr-5 outline outline-1 rounded-lg w-20 h-10" type="text" name="search">
+				</label>
+			</div>
+			<!-- options bar -->
+			<div class="col-span-3 flex flex-wrap w-8/12 xl:space-x-6 lg:space-x-1">
+				<label>
+					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 text-center mr-2 mb-2 shadow-md">
+						<option value="default">Type</option>
+						<option value="First">First</option>
+						<option value="Last">Last</option>
+					</select>
+				</label>
+				<label>
+					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 text-left mr-2 mb-2 shadow-md">
+						<option value="default">Weakness</option>
+						<option value="First">First</option>
+						<option value="Last">Last</option>
+					</select>
+				</label>
+				<label>
+					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 text-left mr-2 mb-2 shadow-md">
+						<option value="default">Ability</option>
+						<option value="First">First</option>
+						<option value="Last">Last</option>
+					</select>
+				</label>
+				<label>
+					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 text-left mr-2 mb-2 shadow-md">
+						<option value="default">Height</option>
+						<option value="First">First</option>
+						<option value="Last">Last</option>
+					</select>
+				</label>
+				<label>
+					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 text-left mr-2 mb-2 shadow-md">
+						<option value="default">Weight</option>
+						<option value="First">highest</option>
+						<option value="Last">lowest</option>
+					</select>
+				</label>
+				<button class="shadow-md py-2.5 px-2.5 mr-2 mb-2 bg-white rounded-lg">
+					<i class="material-icons text-sm scale-150 transition ease-in-out duration-500 hover:rotate-180">refresh</i>
+				</button>
+			</div>
+			<!-- pokemon list -->
+			<div class="col-span-2 pl-20">
+				<div class="grid justify-items-start grid-cols-3">
+					<div class="col-span-3 mr-40 py-8 space-y-3 ">
+						<button class="justify-self-stretch transition duration-200 hover:-translate-y-1 bg-white shadow-lg rounded-[20px] font-medium text-gray-500 p-20 m-5">
+							another one
+						</button>
+						<button class="transition duration-200 hover:-translate-y-1 bg-white shadow-lg rounded-[20px] font-medium text-gray-500 p-20 m-5">
+							placeholder
+						</button>
+						<button class="transition duration-200 hover:-translate-y-1 bg-white shadow-lg rounded-[20px] font-medium text-gray-500 p-20 m-5">
+							another one
+						</button>
+						<button class="transition duration-200 hover:-translate-y-1 bg-white shadow-lg rounded-[20px] font-medium text-gray-500 p-20 m-5">
+							another one
+						</button>
+						<button class="transition duration-200 hover:-translate-y-1 bg-white shadow-lg rounded-[20px] font-medium text-gray-500 p-20 m-5">
+							another one
+						</button>
+						<button class="transition duration-200 hover:-translate-y-1 bg-white shadow-lg rounded-[20px] font-medium text-gray-500 p-20 m-5">
+							another one
+						</button>
+					</div>
+				</div>
+			</div>
+			<!-- sidebar -->
+			<div class="transition duration-200 hover:-translate-y-1 sidebar w-[400px] h-[500px] py-20 text-center bg-white rounded-[20px] shadow-lg">
+				Lorem Ipsum<br>this is a placeholder.<br>Another one bites the dust.
+			</div>
+		</div>
+		<!-- footer -->
+		<footer>
+			<div class="text-xs text-gray-400 py-5">
+				Copyright © 2022 Placeholder. All rights reserved to placeholder™.
+			</div>
+		</footer>
+	</div>
 </body>
-
 </html>
