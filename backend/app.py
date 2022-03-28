@@ -76,7 +76,14 @@ def abilities():
         return 'Key does not exist'
     except err.IntegrityError:
         return 'Ambiguous key'
-    return json.dumps(cursor.fetchall())
+
+    to_return = []
+    for pId, pName, pAbilities in cursor.fetchall():
+        to_return.append({"id": pId,
+                          "name": pName,
+                          "types": json.loads(pAbilities)})
+
+    return {"data": to_return}
 
 
 @app.route('/pokemon/types/', methods=['GET'])
@@ -115,7 +122,14 @@ def types():
         return 'Key does not exist'
     except err.IntegrityError:
         return 'Ambiguous key'
-    return json.dumps(cursor.fetchall())
+
+    to_return = []
+    for pId, pName, pTypes in cursor.fetchall():
+        to_return.append({"id": pId,
+                          "name": pName,
+                          "types": json.loads(pTypes)})
+
+    return {"data": to_return}
 
 
 if __name__ == '__main__':
