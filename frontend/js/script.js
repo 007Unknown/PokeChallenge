@@ -198,7 +198,6 @@ function changePkmList() {
 }
 
 
-// arbitrary numbers for testing
 async function createMany(start, end) {
     for (let i = start-1; i < end; i++){
         createPokemon(i)
@@ -256,4 +255,5 @@ function createLoadMore(start, end) {
     startNumber += 6
 }
 
+// arbitrary numbers for testing
 createMany(1, 16).then()
