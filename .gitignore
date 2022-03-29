@@ -7,3 +7,4 @@ database/*
 backend/images/
 frontend/images/hd/*
 frontend/images/background/sprites/*
+frontend/images/sprites/*
