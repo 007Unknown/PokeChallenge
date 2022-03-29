@@ -135,18 +135,20 @@
 					</select>
 				</label>
 				<button class="shadow-md py-2.5 px-2.5 lg:mr-2 lg:mb-2 bg-white rounded-lg">
-					<i class="material-icons text-sm scale-150 transition ease-in-out duration-500 hover:rotate-180">refresh</i>
+					<i class="material-icons text-sm scale-150
+							transition ease-in-out duration-500 hover:rotate-180">refresh</i>
 				</button>
 			</div>
 			<!-- pokemon view & sidebar -->
 			<div class="col-span-2 relative">
 				<!-- pokemon list -->
-				<div id="pkm list" class="relative w-10/12 col-span-3 pt-12">
+				<div id="pkm list" class="relative w-10/12 pt-10 ">
 				</div>
-				<button id="load" class="bottom-10 col-span-2">
-					<div id="load-12" class="transition duration-200 hover:-translate-y-0.5
+				<!-- load -->
+				<button id="load" class="bottom-10 ">
+					<div class="transition duration-200 hover:-translate-y-0.5
 								bottom-0 bg-white rounded-lg shadow-md w-1/6 p-2 absolute left-[450px]"
-						onclick="create()">
+						onclick="createLoadMore(startNumber, (startNumber+5))">
 						Load more
 					</div>
 				</button>
