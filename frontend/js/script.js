@@ -41,7 +41,6 @@ function createPokemon(id) {
     search('pokemon/types', `${id+1}`)
         .then(response => {
             let data = response['data']['0']
-            //console.log(response)
             pokemon.innerHTML += `
         <button
             id=${id+1}
@@ -63,8 +62,6 @@ function createPokemon(id) {
     </button>
     `
             let pokeTypes = data['types']
-            console.log(data['types'])
-
             if (pokeTypes.length === 1) {
                 document.getElementById(`types-${id+1}`).innerHTML = `
                <div class="rounded-lg bg-slate-300">
@@ -83,12 +80,15 @@ function createPokemon(id) {
                  </div>`
                 }
             }
-
         })
 }
 
 function changeSidebar(id) {
-    sidebar.innerHTML = `
+    search('pokemon', `${id}`)
+        .then(response => {
+            let data = response[0]
+            let total = (data['hp'] + data['attack'] + data['defense'] + data['special_attack'] + data['special_defense'] + data['speed'])
+            sidebar.innerHTML = `
     <div class="transition duration-200
              w-[400px] h-[800px]
              text-center bg-white rounded-[20px] shadow-xl">
@@ -100,23 +100,13 @@ function changeSidebar(id) {
 				<p>#${id}</p>
 			</div>
 			<div class="text-2xl font-extrabold">
-				<p>TID_NAME</p>
+				<p>${data['name']}</p>
 			</div>
 			<!-- type(s) -->
-			<p class="py-1 text-gray-500 text-sm">Seed Pokémon</p>
-			<div class="flex justify-center gap-3">
-				<div class="text opacity-75 font-bold p-1 bg-green-500 rounded-lg">
-					TID_TYPE
-				</div>
-				<div class="rounded-lg bg-slate-300">
-					<div class="text opacity-75 font-bold p-1 bg-purple-500 rounded-lg">
-						TID_TYPE
-					</div>
-				</div>
-			</div>
+			<p class="py-1 text-gray-500 text-sm">${data['species']} Pokémon</p>
 			<div class="px-4">
 				<p class="font-bold py-2 pt-4 uppercase">pokédex entry</p>
-				<p>TID_DESCRIPTION</p>
+				<p>${data['description']}</p>
 			</div>
 			<div class="grid grid-cols-2 flex justify-center gap-4 mr-5 ml-5 mt-2">
 				<p class="col-span-2 font-bold uppercase">Abilities</p>
@@ -129,10 +119,10 @@ function changeSidebar(id) {
 				<p class="font-bold uppercase">height</p>
 				<p class="font-bold uppercase">weight</p>
 				<div class="text opacity-75 font-bold p-2 bg-slate-200 rounded-[20px]">
-					TID_HEIGHT
+					${data['height']} m
 				</div>
 				<div class="text opacity-75 font-bold p-2 bg-slate-200 rounded-[20px]">
-					TID_WEIGHT
+					${data['weight']} kg
 				</div>
 				<p class="font-bold uppercase">weaknesses</p>
 				<p class="font-bold uppercase">base exp</p>
@@ -140,7 +130,7 @@ function changeSidebar(id) {
 					TID_WEAKNESS
 				</div>
 				<div class="text opacity-75 font-bold p-2 bg-slate-200 rounded-[20px]">
-					TID_BASE_EXP
+					${data['base_experience']}
 				</div>
 			</div>
 			<p class="font-bold uppercase py-2">Stats</p>
@@ -149,31 +139,31 @@ function changeSidebar(id) {
 						grid grid-cols-7 px-5 gap-4">
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-red-400 uppercase">hp</p>
-					<p class="static rounded-[20px] ">1</p>
+					<p class="static rounded-[20px] ">${data['hp']}</p>
 				</div>
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-orange-400 uppercase">atk</p>
-					<p class="static rounded-[20px]">1</p>
+					<p class="static rounded-[20px]">${data['attack']}</p>
 				</div>
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-yellow-400 uppercase">def</p>
-					<p class="static rounded-[20px] ">1</p>
+					<p class="static rounded-[20px] ">${data['defense']}</p>
 				</div>
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-sky-400">SpA</p>
-					<p class="static rounded-[20px] ">1</p>
+					<p class="static rounded-[20px] ">${data['special_attack']}</p>
 				</div>
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-green-400">SpD</p>
-					<p class="static rounded-[20px] ">1</p>
+					<p class="static rounded-[20px] ">${data['special_defense']}</p>
 				</div>
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-pink-400 uppercase">spd</p>
-					<p class="static rounded-[20px] ">1</p>
+					<p class="static rounded-[20px] ">${data['speed']}</p>
 				</div>
 				<div class="bg-slate-200 rounded-[20px] p-1">
 					<p class="rounded-[20px] p-1 bg-blue-400 uppercase">tot</p>
-					<p class="static rounded-[20px] ">1</p>
+					<p class="static rounded-[20px] ">${total}</p>
 				</div>
 			</div>
 			<div class="py-5">
@@ -191,53 +181,20 @@ function changeSidebar(id) {
 		</div>
 	</div>
     `
+        })
 }
 
 function changePkmList() {
-    //if (getInputValue() )
     search('pokemon/types', getInputValue())
         .then(response => {
-            console.log(getInputValue() == null)
             let data = response['data']['0']
             let pid = data['id']
-            let name = data['name']
-            console.log(response)
-            pokemon.innerHTML = `
-        <!-- pokemon ${pid}-->
-        <button
-                id=${pid}
-	        	class="relative transition duration-200 hover:-translate-y-1
-	        	bg-white shadow-lg rounded-[20px] font-bold font-medium
-	        	pb-5 py-[55px] px-10 mt-5 mx-4 my-14" onclick="changeSidebar(${pid})">
-	        <div class="sprite absolute -top-14 right-16">
-	        	<img src="images/hd/${pid}.png" class="max-w-[115px]" alt="${pid} pokemon">
-	        </div>
-	        <div class="text-sm pt-2 text-gray-500">
-	        	<p>Nº${pid}</p>
-	        </div>
-	        <div class="text-black text-lg">
-	        	<p>${name}</p>
-	        </div>
-	        <!-- type(s) -->
-	        <div class="grid grid-cols-2 gap-1">
-	        	<div class="rounded-lg bg-slate-300">
-	        		<div class="text opacity-75 font-bold p-1">
-	        			TID_TYPE
-	        		</div>
-	        	</div>
-	        	<div class="rounded-lg bg-slate-300">
-	        		<div class="text opacity-75 font-bold p-1">
-	        			TID_TYPE
-	        		</div>
-	        	</div>
-	        </div>
-        </button>
-        `
+            pokemon.innerHTML = ``
+            createPokemon(pid-1)
             load.innerHTML = `
             <div class="hidden"></div>`
         }
     )
-
 }
 
 
