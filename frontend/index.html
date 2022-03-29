@@ -59,9 +59,9 @@
 				<div class="flex items-center relative rounded-lg drop-shadow-xl bg-white p-5">
 					<label>
 						<input id="textBox" class="bg-transparent input text-justify relative "
-							   placeholder="Search your Pokémon!" type="search" name="search">
+							   placeholder="Search your Pokémon!" type="text">
 						<label class="absolute inset-y-3 right-5">
-							<button id="btn" onclick="search(`pokemon/types`,getValue())"
+							<button id="btn" onclick="changePkmList()"
 									class="drop-shadow-md px-3 py-2
 									bg-red-500 hover:bg-red-600 text-white rounded-lg" type="button">
 								<i class="material-icons text-sm scale-150
@@ -79,7 +79,7 @@
 						<option value="First">Descending</option>
 					</select>
 				</label>
-				<label class="absolute right-1 font-bold">
+				<label class="absolute right-0 font-bold">
 					from
 					<input class="bg-transparent outline outline-1 rounded-lg w-20 h-10" type="text" name="search">
 					to
@@ -87,9 +87,10 @@
 				</label>
 			</div>
 			<!-- options bar -->
-			<div class="col-span-3 flex flex-wrap relative lg:left-[12px] w-8/12 space-x-4">
+			<div class="col-span-3 flex flex-wrap relative w-8/12
+						3xl:space-x-[30px] xl:space-x-8 lg:space-x-4 md:space-x-2">
 				<label>
-					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm
+					<select name="Type" class="text-gray-500 font-medium rounded-lg text-sm
 					xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 md:px-3 md:py-1
 					lg:mr-2 lg:mb-2 shadow-md">
 						<option value="default">Type</option>
@@ -100,7 +101,7 @@
 				<label>
 					<select name="Type" class="inline-flex text-gray-500 font-medium rounded-lg text-sm
 					xl:px-14 xl:py-3 lg:px-12 lg:py-2.5 md:px-3 md:py-1
-					text-left lg:mr-2 lg:mb-2 shadow-md">
+					text-left lg:mr-2 lg:mb-2 md:mr-1 md:mb-1 shadow-md">
 						<option value="default">Weakness</option>
 						<option value="First">First</option>
 						<option value="Last">Last</option>
@@ -140,11 +141,24 @@
 			<!-- pokemon view & sidebar -->
 			<div class="col-span-2 relative">
 				<!-- pokemon list -->
-				<div id="pkm list" class="relative w10/12 col-span-3 py-12">
+				<div id="pkm list" class="relative w-10/12 col-span-3 pt-12">
 				</div>
+				<button id="load" class="bottom-10 col-span-2">
+					<div id="load-12" class="transition duration-200 hover:-translate-y-0.5
+								bottom-0 bg-white rounded-lg shadow-md w-1/6 p-2 absolute left-[450px]"
+						onclick="create()">
+						Load more
+					</div>
+				</button>
 			</div>
 			<!-- sidebar -->
 			<div id="sidebar" class="row-span-2">
+				<div class="hidden transition duration-200
+             w-[400px] h-[800px]
+             text-center bg-white rounded-[20px] shadow-xl">
+					<div class="sprite relative -top-[100px] -right-[80px]">
+					</div>
+				</div>
 			</div>
 			<!-- footer -->
 			<footer>
