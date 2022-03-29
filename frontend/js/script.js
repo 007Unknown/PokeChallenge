@@ -256,4 +256,4 @@ function createLoadMore(start, end) {
     startNumber += 6
 }
 
-createMany(1, 12).then()
+createMany(1, 16).then()
